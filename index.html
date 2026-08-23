@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ETHUSDT 15M - Vortex Snipper Premium</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: #0a0a0a; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; color: #e8e8e8; }
+        .binance-card { max-width: 1100px; width: 100%; background: #141416; border-radius: 30px; padding: 36px 40px; border: 1px solid #2a2a2e; box-shadow: 0 20px 60px rgba(0,0,0,0.9); }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2a2e; padding-bottom: 24px; margin-bottom: 24px; }
+        .pair { display: flex; align-items: center; gap: 14px; }
+        .pair h1 { font-size: 30px; color: #e8e8e8; }
+        .pair i { color: #f0b90b; font-size: 28px; }
+        .badge { background: #222226; color: #a0a0a8; font-size: 18px; padding: 6px 18px; border-radius: 40px; border: 1px solid #333337; }
+        .price-box { background: #0d0d0f; padding: 12px 24px; border-radius: 40px; border: 1px solid #2a2a2e; }
+        .price-live { font-size: 26px; font-weight: 700; color: #e8e8e8; }
+        
+        .candles-bar { display: flex; gap: 10px; margin-bottom: 24px; justify-content: space-between; }
+        .candle-item { flex: 1; background: #0d0d0f; padding: 10px; border-radius: 14px; border: 1px solid #2a2a2e; text-align: center; font-size: 12px; }
+        .candle-green { border-color: #0ecb8133; background: #0ecb810a; }
+        .candle-red { border-color: #f6465d33; background: #f6465d0a; }
+        .candle-title { font-weight: 700; color: #888892; margin-bottom: 4px; border-bottom: 1px solid #222; padding-bottom: 2px; }
+        .candle-time { color: #f0b90b; font-weight: 600; margin-bottom: 6px; }
+        .candle-val { display: flex; justify-content: space-between; color: #aaa; margin-top: 2px; font-family: monospace; }
+        .val-green { color: #0ecb81; font-weight: 600; }
+        .val-red { color: #f6465d; font-weight: 600; }
+
+        .signal-box { background: #0d0d0f; border-radius: 24px; padding: 24px 30px; margin: 24px 0; display: flex; justify-content: space-between; align-items: center; border: 1px solid #2a2a2e; }
+        .signal-label { color: #888892; font-size: 20px; font-weight: 800; }
+        .signal-value { font-size: 36px; font-weight: 700; }
+        .signal-green { color: #0ecb81; } .signal-red { color: #f6465d; } .signal-neutral { color: #888892; }
+        
+        .history-section { margin-top: 28px; border-top: 1px solid #2a2a2e; padding-top: 22px; }
+        .history-header { display: flex; justify-content: space-between; align-items: center; color: #b0b0b8; font-size: 18px; font-weight: 700; margin-bottom: 14px; }
+        .win-count { color: #0ecb81; } .loss-count { color: #f6465d; }
+        .history-list { max-height: 260px; overflow-y: auto; padding-right: 4px; }
+        .history-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 22px; background: #0d0d0f; border-radius: 16px; margin-bottom: 10px; color: #e0e0e0; font-size: 15px; border: 1px solid #1f1f24; }
+        
+        .badge-fixed { width: 75px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border-radius: 20px; font-weight: 700; font-size: 13px; text-align: center; }
+        .win-badge { background: #0ecb81; color: #0a0a0a; }
+        .loss-badge { background: #f6465d; color: #fff; }
+        
+        .strat-badge { background: #f0b90b20; color: #f0b90b; border: 1px solid #f0b90b40; padding: 4px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; width: 85px; text-align: center; }
+        .cloud-badge { background: #0ecb8115; color: #0ecb81; border: 1px solid #0ecb8133; padding: 6px 14px; border-radius: 30px; font-size: 13px; font-weight: 700; }
+    </style>
+</head>
+<body>
+
+<div class="binance-card">
+    <div class="header">
+        <div class="pair">
+            <i class="fab fa-bitcoin"></i>
+            <h1>ETHUSDT</h1>
+            <span class="badge"><i class="far fa-clock"></i> 15M</span>
+        </div>
+        <div style="display:flex; gap:12px; align-items:center;">
+            <span class="cloud-badge"><i class="fas fa-robot"></i> GITHUB 24/7 ACTIVE</span>
+            <div class="price-box">
+                <span class="price-live">$<span id="livePrice">--</span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="candles-bar" id="candlesBar"></div>
+
+    <div class="signal-box">
+        <span class="signal-label"><i class="fas fa-bullhorn"></i> CURRENT SIGNAL</span>
+        <span id="signalDisplay" class="signal-value signal-neutral">CALCULATING...</span>
+    </div>
+
+    <div class="history-section">
+        <div class="history-header">
+            <span><i class="fas fa-list-ul"></i> TRADING HISTORY (LAST 30)</span>
+            <span><span id="winCount" class="win-count">0</span>W / <span id="lossCount" class="loss-count">0</span>L</span>
+            <span id="strategyDisplay" style="color:#f0b90b;">⚡ HYBRID</span>
+        </div>
+        <div class="history-list" id="historyList"></div>
+    </div>
+</div>
+
+<script>
+    function getPrediction(c1, strategy) {
+      if (strategy === 1) {
+        if (c1 === 'red') return 'red';
+        if (c1 === 'green') return 'green';
+      } else {
+        if (c1 === 'red') return 'green';
+        if (c1 === 'green') return 'red';
+      }
+      return null;
+    }
+
+    async function updateData() {
+        try {
+            // 1. Fetch live price from Binance
+            const pResp = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=ETHUSDT');
+            const pData = await pResp.json();
+            document.getElementById('livePrice').textContent = parseFloat(pData.price).toFixed(2);
+
+            // 2. Fetch klines for candles visual
+            const kResp = await fetch('https://api.binance.com/api/v3/klines?symbol=ETHUSDT&interval=15m&limit=7');
+            const kData = await kResp.json();
+            const closed = kData.slice(0, 6);
+            
+            const parsed = closed.map(c => ({
+              open: parseFloat(c[1]).toFixed(2),
+              close: parseFloat(c[4]).toFixed(2),
+              color: parseFloat(c[4]) >= parseFloat(c[1]) ? 'green' : 'red',
+              time: new Date(c[0]).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false })
+            }));
+
+            const cBar = document.getElementById('candlesBar');
+            cBar.innerHTML = '';
+            parsed.forEach((c, i) => {
+                const div = document.createElement('div');
+                div.className = 'candle-item candle-' + c.color;
+                const valClass = c.color === 'green' ? 'val-green' : 'val-red';
+                div.innerHTML = `
+                    <div class="candle-title">Candle ${i+1}</div>
+                    <div class="candle-time">${c.time}</div>
+                    <div class="candle-val"><span>O:</span> <span>${c.open}</span></div>
+                    <div class="candle-val ${valClass}"><span>C:</span> <span>${c.close}</span></div>
+                `;
+                cBar.appendChild(div);
+            });
+
+            // 3. Fetch GitHub State File (bot_state.json)
+            // GitHub raw link automatically updates when Actions commits new state!
+            const repoOwner = "ranamahsan31-muhammad"; // Aapka github username
+            const repoName = "eth-trading-bot";       // Aapki repository ka naam
+            const sResp = await fetch(`https://raw.githubusercontent.com/${repoOwner}/${repoName}/main/bot_state.json?t=` + new Date().getTime());
+            
+            if (!sResp.ok) return;
+            const state = await sResp.json();
+
+            const c1 = parsed[0].color;
+            const livePred = getPrediction(c1, state.currentStrategy || 1);
+
+            const sig = document.getElementById('signalDisplay');
+            if (livePred) {
+                sig.textContent = livePred === 'green' ? '📈 BUY' : '📉 SELL';
+                sig.className = 'signal-value signal-' + livePred;
+            } else {
+                sig.textContent = 'NEUTRAL';
+                sig.className = 'signal-value signal-neutral';
+            }
+
+            document.getElementById('winCount').textContent = state.wins || 0;
+            document.getElementById('lossCount').textContent = state.losses || 0;
+            document.getElementById('strategyDisplay').textContent = (state.currentStrategy || 1) === 1 ? '⚡ HYBRID' : '🚀 TURBO';
+
+            const hList = document.getElementById('historyList');
+            hList.innerHTML = '';
+            if (!state.history || state.history.length === 0) {
+                hList.innerHTML = '<div style="color:#5a5a62; text-align:center; padding:20px;">WAITING FOR ENGINE...</div>';
+            } else {
+                state.history.forEach(item => {
+                    const row = document.createElement('div');
+                    row.className = 'history-row';
+                    const badge = item.result === 'WIN' 
+                        ? '<span class="badge-fixed win-badge">WIN</span>' 
+                        : '<span class="badge-fixed loss-badge">LOSS</span>';
+                    const stratBadge = `<span class="strat-badge">${item.strategy || 'HYBRID'}</span>`;
+                    row.innerHTML = `
+                        <span style="font-weight:600; width:60px;">${item.time}</span>
+                        <span style="font-weight:700; width:60px;">${item.prediction}</span>
+                        ${stratBadge}
+                        <span style="font-family:monospace; font-weight:600;">$${item.price}</span>
+                        ${badge}
+                    `;
+                    hList.appendChild(row);
+                });
+            }
+        } catch(e){
+            console.error(e);
+        }
+    }
+
+    setInterval(updateData, 5000);
+    updateData();
+</script>
+</body>
+</html>
