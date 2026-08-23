@@ -1,0 +1,14 @@
+{
+  "wins": 1,
+  "losses": 0,
+  "currentStrategy": 1,
+  "history": [
+    {
+      "time": "14:15",
+      "prediction": "BUY",
+      "strategy": "HYBRID",
+      "price": "2466.18",
+      "result": "WIN"
+    }
+  ]
+}
