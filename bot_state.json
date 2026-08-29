@@ -10,5 +10,8 @@
       "price": "2466.18",
       "result": "WIN"
     }
-  ]
+  ],
+  "pendingTrade": true,
+  "lastTradeDirection": "green",
+  "lastClosedTime": 1787961600000
 }
