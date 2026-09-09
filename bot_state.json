@@ -1,8 +1,15 @@
 {
   "wins": 3,
-  "losses": 5,
-  "currentStrategy": 2,
+  "losses": 6,
+  "currentStrategy": 1,
   "history": [
+    {
+      "time": "20:45",
+      "prediction": "SELL",
+      "strategy": "TURBO",
+      "result": "LOSS",
+      "price": "2471.82"
+    },
     {
       "time": "22:45",
       "prediction": "BUY",
@@ -62,6 +69,6 @@
   ],
   "pendingTrade": true,
   "lastTradeDirection": "red",
-  "lastClosedTime": 1788821100000,
-  "consecutiveLosses": 0
+  "lastClosedTime": 1788986700000,
+  "consecutiveLosses": 1
 }
