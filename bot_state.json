@@ -1,8 +1,15 @@
 {
   "wins": 5,
-  "losses": 6,
-  "currentStrategy": 1,
+  "losses": 7,
+  "currentStrategy": 2,
   "history": [
+    {
+      "time": "20:30",
+      "prediction": "BUY",
+      "strategy": "HYBRID",
+      "result": "LOSS",
+      "price": "2587.42"
+    },
     {
       "time": "08:15",
       "prediction": "BUY",
@@ -83,6 +90,6 @@
   ],
   "pendingTrade": true,
   "lastTradeDirection": "green",
-  "lastClosedTime": 1789200900000,
-  "consecutiveLosses": 0
+  "lastClosedTime": 1789417800000,
+  "consecutiveLosses": 1
 }
